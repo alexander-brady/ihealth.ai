@@ -6,6 +6,6 @@
   scroll-behavior: smooth;
 }
 
-  :root{
+  *{
   border: 1px solid red;
 }

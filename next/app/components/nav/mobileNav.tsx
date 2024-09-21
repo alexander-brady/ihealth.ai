@@ -23,11 +23,11 @@ export default function MobileNav() {
           </button>
         </div>
         {showDropdown && (
-        <div className="bg-white text-left">
+        <div className="bg-white text-left h-[100vh]">
           <ul className="flex flex-col p-6">
             {['About', 'Benefits', 'Questions'].map((item) => (
               <li key={item} className="my-2">
-                <a href={`#${item.toLowerCase()}`} className="block text-xl font-black duration-300 hover:text-blue-600 transition-colors">
+                <a onClick={Callback} href={`#${item.toLowerCase()}`} className="block text-xl font-black duration-300 hover:text-blue-600 transition-colors">
                   {item}
                 </a>
               </li>

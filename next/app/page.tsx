@@ -8,6 +8,7 @@ import LandingNav from "./components/nav/landingNav";
 import MobileNav from "./components/nav/mobileNav";
 import SectionHeading from "./components/core/sectionHeading";
 import SectionSubText from "./components/core/sectionSubText";
+import DropDownMenu from './components/core/dropDownMenu';
 
 export default function Home() {
   return (
@@ -65,15 +66,21 @@ export default function Home() {
       <section id="questions" className="w-full py-32">
         <div className="text-center max-w-screen-xl mx-auto">
           <SectionHeading text="FAQs"/>
-            
+            <div className="mx-5 xl:mx-0">
+              <DropDownMenu question="FAQ" answer="Lorem ipsum odor amet, consectetuer adipiscing elit. Magna ridiculus condimentum aenean penatibus tempus imperdiet justo vulputate. Mus eget pharetra mattis rhoncus vulputate neque hac."/>
+              <DropDownMenu question="FAQ" answer="Lorem ipsum odor amet, consectetuer adipiscing elit. Magna ridiculus condimentum aenean penatibus tempus imperdiet justo vulputate. Mus eget pharetra mattis rhoncus vulputate neque hac."/>
+              <DropDownMenu question="FAQ" answer="Lorem ipsum odor amet, consectetuer adipiscing elit. Magna ridiculus condimentum aenean penatibus tempus imperdiet justo vulputate. Mus eget pharetra mattis rhoncus vulputate neque hac."/>
+              <DropDownMenu question="FAQ" answer="Lorem ipsum odor amet, consectetuer adipiscing elit. Magna ridiculus condimentum aenean penatibus tempus imperdiet justo vulputate. Mus eget pharetra mattis rhoncus vulputate neque hac."/>
+              <DropDownMenu question="FAQ" answer="Lorem ipsum odor amet, consectetuer adipiscing elit. Magna ridiculus condimentum aenean penatibus tempus imperdiet justo vulputate. Mus eget pharetra mattis rhoncus vulputate neque hac."/>
+            </div>
         </div>
       </section>
 
       <section className="w-full py-32">
-        <div className="max-w-screen-xl bg-slate-100 rounded-3xl m-auto p-32 shadow-md">
-          <div className="flex flex-col text-center items-center p-10">
+        <div className="max-w-screen-xl bg-slate-100 rounded-3xl m-auto py-32 px-16">
+          <div className="flex flex-col text-center items-center">
             <SectionHeading text="Go down your health journey today!"/>
-            <Button text="Start Chatting!" stylingClass="py-4 px-4 bg-slate-100 mt-8 text-center max-w-48" pageRef="/login" />
+            <Button text="Start Chatting!" stylingClass="py-4 px-4 bg-slate-200 mt-8 text-center max-w-48" pageRef="/login" />
           </div>
         </div>
       </section>
