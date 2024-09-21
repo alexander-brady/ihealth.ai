@@ -85,8 +85,8 @@ export default function Home() {
         </div>
       </section>
 
-      <footer className="w-full bg-slate-100 rounded-tl-[5rem] rounded-tr-[5rem]">
-        <div className="max-w-screen-xl m-auto p-10 flex flex-col text-center ">
+      <footer className="w-full bg-slate-100 rounded-tl-[5rem] rounded-tr-[5rem] py-32">
+        <div className="max-w-screen-xl m-auto flex flex-col text-center ">
           <SectionHeading text="iHealth" />
           <SectionSubText text="Moving towards a better future!"/>
           <p className="font-serif">© 2024 iHealth INC</p>
