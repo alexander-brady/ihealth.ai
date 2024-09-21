@@ -18,7 +18,7 @@ MONGO_URI = "mongodb+srv://alexjbrady66:dLpyb10SKl8FHRNX@pennapps.wzkt4.mongodb.
 # Initialize MongoDB client
 client = MongoClient(MONGO_URI)
 db = client['health_data']  # Name of your database
-collection = db['combined_health_metrics_Jamal']  # Name of your collection
+collection = db['combined_health_metrics_Pokemon']  # Name of your collection
 # Function to clean heart rate data
 # Function to clean heart rate data (also applicable for other data types)
 def clean_heart_rate_data(file_path, start_date_str, end_date_str):
@@ -166,6 +166,27 @@ def update_sleep_analysis_dates_sequentially(data, new_start_date_str):
     data['startDate'] = new_start_dates
     data['endDate'] = new_end_dates
     return data
+@app.route('/fetch-heart-rate', methods=['GET'])
+def fetch_heart_rate():
+    try:
+        # Fetch heart rate data from MongoDB
+        heart_rate_data = collection.find({"type": "HKQuantityTypeIdentifierHeartRate"})
+        heart_rate_list = []
+        
+        # Loop through the data and prepare it for the frontend
+        for record in heart_rate_data:
+            heart_rate_list.append({
+                "value": record.get("value"),
+                "startDate": record.get("startDate"),
+                "endDate": record.get("endDate")
+            })
+
+        # Return the data as JSON
+        return jsonify({"heart_rate_data": heart_rate_list}), 200
+
+    except Exception as e:
+        print(f"Error fetching data: {str(e)}")
+        return jsonify({"error": f"Failed to fetch data: {str(e)}"}), 500
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
