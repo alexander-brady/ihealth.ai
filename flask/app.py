@@ -50,6 +50,12 @@ class CerebrasLLM(LLM, BaseModel):
 # Initialize Conversation Memory
 memory = ConversationBufferMemory()
 
+# Initial prompt for health-related questions
+initial_prompt = (
+    "You are a healthcare assistant. Your task is to ask health-related questions "
+    "to determine if the user needs to see a doctor. Start the conversation by asking the user about their health."
+)
+
 # Create a PromptTemplate
 prompt_template = PromptTemplate(
     input_variables=["input"],
@@ -63,6 +69,9 @@ conversation_chain = ConversationChain(
     memory=memory,
     verbose=True
 )
+
+# Initialize the model with the initial health prompt
+memory.save_context({"system": "Healthcare Assistant"}, {"message": initial_prompt})
 
 @app.route('/send-message', methods=['POST'])
 def send_message():
