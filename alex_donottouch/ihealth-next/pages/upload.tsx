@@ -14,6 +14,7 @@ export default function Upload() {
   const [heartRateData, setHeartRateData] = useState<any[]>([]); // For heart rate data
   const [loadingHeartRate, setLoadingHeartRate] = useState<boolean>(false); // For loading state
   const [aggregatedData, setAggregatedData] = useState<{ average: number, min: number, max: number } | null>(null);
+  const [heartRateAnalysis, setHeartRateAnalysis] = useState<any>(null); // For heart rate analysis
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     setFile(acceptedFiles[0]);
@@ -72,6 +73,16 @@ export default function Upload() {
     });
   };
 
+  // Fetch heart rate analysis from the backend
+  const handleFetchHeartRateAnalysis = async () => {
+    try {
+      const response = await axios.get('http://127.0.0.1:5000/analyze-heart-rate');
+      setHeartRateAnalysis(response.data); // Save the analysis data
+    } catch (error) {
+      console.error('Error fetching heart rate analysis:', error);
+    }
+  };
+
   // Save the heart rate data to a JSON file
   const handleSaveHeartRateAsJson = () => {
     const jsonData = JSON.stringify(heartRateData, null, 2); // Pretty print the JSON
@@ -127,6 +138,26 @@ export default function Upload() {
 
           <button onClick={handleSaveHeartRateAsJson}>Save as JSON</button>
         </>
+      )}
+
+      <hr />
+
+      {/* Heart Rate Analysis */}
+      <h2>Heart Rate Analysis</h2>
+      <button onClick={handleFetchHeartRateAnalysis}>
+        Fetch Heart Rate Analysis
+      </button>
+
+      {heartRateAnalysis && (
+        <div>
+          <h3>Analysis Result</h3>
+          <p>Average Heart Rate: {heartRateAnalysis.average_heart_rate.toFixed(2)}</p>
+          <p>Min Heart Rate: {heartRateAnalysis.min_heart_rate}</p>
+          <p>Max Heart Rate: {heartRateAnalysis.max_heart_rate}</p>
+          <p>Bradycardia Count: {heartRateAnalysis.bradycardia_count}</p>
+          <p>Tachycardia Count: {heartRateAnalysis.tachycardia_count}</p>
+          <p><strong>Comment:</strong> {heartRateAnalysis.comment}</p>
+        </div>
       )}
     </div>
   );

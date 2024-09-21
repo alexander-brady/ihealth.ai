@@ -187,6 +187,52 @@ def fetch_heart_rate():
     except Exception as e:
         print(f"Error fetching data: {str(e)}")
         return jsonify({"error": f"Failed to fetch data: {str(e)}"}), 500
+@app.route('/analyze-heart-rate', methods=['GET'])
+def analyze_heart_rate():
+    try:
+        # Fetch heart rate data from MongoDB
+        heart_rate_data = collection.find({"type": "HKQuantityTypeIdentifierHeartRate"})
+        heart_rate_values = [float(record.get("value")) for record in heart_rate_data]
+
+        if not heart_rate_values:
+            return jsonify({"error": "No heart rate data available."}), 400
+
+        # Calculate statistics
+        avg_hr = sum(heart_rate_values) / len(heart_rate_values)
+        min_hr = min(heart_rate_values)
+        max_hr = max(heart_rate_values)
+
+        # Set thresholds
+        normal_min = 60
+        normal_max = 100
+        bradycardia_threshold = 60
+        tachycardia_threshold = 100
+
+        # Analyze heart rate values
+        bradycardia_count = sum(1 for hr in heart_rate_values if hr < bradycardia_threshold)
+        tachycardia_count = sum(1 for hr in heart_rate_values if hr > tachycardia_threshold)
+
+        # General comment
+        comment = "Heart rate is generally within the normal range."
+        if bradycardia_count > 0 and tachycardia_count == 0:
+            comment = f"Warning: {bradycardia_count} readings indicate low heart rate."
+        elif tachycardia_count > 0 and bradycardia_count == 0:
+            comment = f"Warning: {tachycardia_count} readings indicate high heart rate."
+        elif bradycardia_count > 0 and tachycardia_count > 0:
+            comment = f"Warning: There are instances of both bradycardia and tachycardia in the data."
+
+        return jsonify({
+            "average_heart_rate": avg_hr,
+            "min_heart_rate": min_hr,
+            "max_heart_rate": max_hr,
+            "bradycardia_count": bradycardia_count,
+            "tachycardia_count": tachycardia_count,
+            "comment": comment
+        }), 200
+
+    except Exception as e:
+        print(f"Error analyzing heart rate data: {str(e)}")
+        return jsonify({"error": f"Failed to analyze data: {str(e)}"}), 500
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
