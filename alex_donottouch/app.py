@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 import pandas as pd
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+from pymongo import MongoClient
 
 app = Flask(__name__)
 CORS(app)
@@ -13,6 +14,11 @@ OUTPUT_FOLDER = '/Users/alexdang/ihealth.ai/cool'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 
+MONGO_URI = "mongodb+srv://alexjbrady66:dLpyb10SKl8FHRNX@pennapps.wzkt4.mongodb.net/?retryWrites=true&w=majority&appName=PennApps"
+# Initialize MongoDB client
+client = MongoClient(MONGO_URI)
+db = client['health_data']  # Name of your database
+collection = db['combined_health_metrics_Jamal']  # Name of your collection
 # Function to clean heart rate data
 def clean_heart_rate_data(file_path, start_date_str, end_date_str):
     try:
@@ -204,6 +210,12 @@ def upload_file():
 
             # Save the combined data
             combined_df.to_csv(combined_csv_output, index=False)
+            
+            # 5. Upload combined data to MongoDB
+            combined_data = combined_df.to_dict(orient='records')  # Convert the combined dataframe to a list of dictionaries
+            collection.insert_many(combined_data)  # Insert the combined data into MongoDB collection
+            inserted_count = len(combined_data)
+            print(f"Successfully inserted {inserted_count} records into MongoDB")
 
             return jsonify({
                 "message": "All data processed and combined successfully",
