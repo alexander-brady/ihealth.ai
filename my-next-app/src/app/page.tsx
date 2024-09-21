@@ -21,7 +21,11 @@ export default function Home() {
     setIsLoading(true);
 
     try {
-      const response = await axios.post<{ text: string }>('/api/cerebras', { message: input });
+      // Send the user's message to the Flask backend
+      const response = await axios.post<{ text: string }>('http://localhost:5000/send-message', {
+        message: input,
+      });
+      console.log(response.data);
       const aiMessage: Message = { sender: 'ai', text: response.data.text };
       setMessages((prevMessages) => [...prevMessages, aiMessage]);
     } catch (error) {
@@ -80,7 +84,6 @@ export default function Home() {
   );
 }
 
-// Explicitly define styles with correct CSS properties
 const styles: { [key: string]: CSSProperties } = {
   container: {
     display: 'flex',

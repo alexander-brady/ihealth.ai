@@ -54,6 +54,8 @@ memory = ConversationBufferMemory()
 initial_prompt = (
     "You are a healthcare assistant. Your task is to ask health-related questions "
     "to determine if the user needs to see a doctor. Start the conversation by asking the user about their health."
+    "make it so that if you have enough information to determine whether they need to see the doctor or not, if the need to see it say: You should go see a doctor. And then give a description of why they should."
+    "if they do not need to see a doctor. You should not see a doctor. And explain why they shouldn't."
 )
 
 # Create a PromptTemplate
