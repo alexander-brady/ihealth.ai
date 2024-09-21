@@ -13,6 +13,7 @@ export default function Upload() {
   const [uploadStatus, setUploadStatus] = useState<string>('');
   const [heartRateData, setHeartRateData] = useState<any[]>([]); // For heart rate data
   const [loadingHeartRate, setLoadingHeartRate] = useState<boolean>(false); // For loading state
+  const [aggregatedData, setAggregatedData] = useState<{ average: number, min: number, max: number } | null>(null);
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     setFile(acceptedFiles[0]);
@@ -45,12 +46,30 @@ export default function Upload() {
     setLoadingHeartRate(true);
     try {
       const response = await axios.get('http://127.0.0.1:5000/fetch-heart-rate');
-      setHeartRateData(response.data.heart_rate_data);
+      const fetchedHeartRateData = response.data.heart_rate_data;
+      setHeartRateData(fetchedHeartRateData);
+      aggregateHeartRateData(fetchedHeartRateData); // Aggregate data after fetching
       setLoadingHeartRate(false);
     } catch (error) {
       console.error('Error fetching heart rate data:', error);
       setLoadingHeartRate(false);
     }
+  };
+
+  // Function to aggregate heart rate data
+  const aggregateHeartRateData = (data: any[]) => {
+    const values = data.map(item => parseFloat(item.value));
+
+    const total = values.reduce((acc, curr) => acc + curr, 0);
+    const average = values.length ? total / values.length : 0;
+    const min = Math.min(...values);
+    const max = Math.max(...values);
+
+    setAggregatedData({
+      average: average,
+      min: min,
+      max: max,
+    });
   };
 
   // Save the heart rate data to a JSON file
@@ -95,6 +114,17 @@ export default function Upload() {
               </li>
             ))}
           </ul>
+
+          {/* Aggregated Data */}
+          {aggregatedData && (
+            <div>
+              <h3>Aggregated Data</h3>
+              <p>Average Heart Rate: {aggregatedData.average.toFixed(2)}</p>
+              <p>Minimum Heart Rate: {aggregatedData.min}</p>
+              <p>Maximum Heart Rate: {aggregatedData.max}</p>
+            </div>
+          )}
+
           <button onClick={handleSaveHeartRateAsJson}>Save as JSON</button>
         </>
       )}
