@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Roboto, Source_Serif_4 } from "next/font/google";
 import "./globals.css";
+import {AuthProvider} from "@propelauth/nextjs/client";
 
 const roboto = Roboto({
   style: ["normal", "italic"],
@@ -17,8 +18,8 @@ const sourceSerif = Source_Serif_4({
 });
 
 export const metadata: Metadata = {
-  title: "iHealth.Ai",
-  description: "Penn Apps project name",
+  title: "iHealth.ai",
+  description: "Your friendly healthcare assistant",
 };
 
 export default function RootLayout({
@@ -31,7 +32,9 @@ export default function RootLayout({
       <body
         className={`${roboto.variable} ${sourceSerif.variable} antialiased`}
       >
-        {children}
+        <AuthProvider authUrl={process.env.NEXT_PUBLIC_AUTH_URL ?? ''}>
+          {children}
+        </AuthProvider>
       </body>
     </html>
   );
