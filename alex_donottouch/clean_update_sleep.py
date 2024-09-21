@@ -39,20 +39,24 @@ def clean_sleep_analysis_data(file_path, start_date_str, end_date_str):
 
     return cleaned_data
 
-# Function to update sleep analysis dates from a cleaned dataset
-def update_sleep_analysis_dates(data, new_start_date_str):
+# Function to update sleep analysis dates sequentially without overlap
+def update_sleep_analysis_dates_sequentially(data, new_start_date_str):
     # Convert new_start_date_str to datetime
     new_start_date = datetime.strptime(new_start_date_str, "%Y-%m-%d")
 
     # Extract original durations (endDate - startDate)
     time_deltas = data['endDate'] - data['startDate']
 
-    # Update startDate and endDate based on new start date
+    # Initialize lists to store updated start/end dates
     new_start_dates = [new_start_date]
     new_end_dates = [new_start_date + time_deltas.iloc[0]]
 
+    # Sequentially adjust the dates, incrementing day if needed to avoid overlap
     for i in range(1, len(data)):
-        new_start_dates.append(new_end_dates[-1] + timedelta(seconds=1))  # Avoid overlap
+        new_start_dates.append(new_end_dates[-1] + timedelta(seconds=1))  # Avoid overlap by adding 1 second
+        # If the new start date's day is the same as the previous one, increment by 1 day
+        if new_start_dates[-1].date() == new_start_dates[-2].date():
+            new_start_dates[-1] += timedelta(days=1)
         new_end_dates.append(new_start_dates[-1] + time_deltas.iloc[i])
 
     # Apply updated dates to the DataFrame
@@ -73,8 +77,8 @@ def clean_and_update_sleep_data(xml_file_path, start_date_str, end_date_str, new
     # Convert cleaned data to a DataFrame
     df = pd.DataFrame(cleaned_sleep_data)
 
-    # Update the dates in the cleaned sleep data
-    updated_df = update_sleep_analysis_dates(df, new_start_date_str)
+    # Update the dates in the cleaned sleep data, ensuring no overlap
+    updated_df = update_sleep_analysis_dates_sequentially(df, new_start_date_str)
 
     # Save the updated data to CSV
     output_path = "/Users/alexdang/ihealth.ai/data/updated_sleep_analysis_data.csv"
@@ -83,7 +87,7 @@ def clean_and_update_sleep_data(xml_file_path, start_date_str, end_date_str, new
 
 if __name__ == "__main__":
     # File path to your Apple Health XML export file
-    xml_file_path = "/Users/alexdang/ihealth.ai/workout-routes/export.xml"
+    xml_file_path = "/Users/alexdang/ihealth.ai/apple_health_export/export.xml"
     
     # Define the date range for cleaning the sleep analysis records
     start_date_str = "2020-01-07"
