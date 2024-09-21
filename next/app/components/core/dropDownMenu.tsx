@@ -23,8 +23,8 @@ export default function DropDownMenu({question, answer}: DropDownMenuProps){
         <div onClick={Callback} className="flex justify-between items-center p-4">
           <SectionHeading text={question}/>
           <button className="flex flex-col h-12 w-12 bg-slate-100 rounded-lg justify-center items-center relative overflow-hidden">
-            <span className={`absolute h-0.5 w-6 rounded-full bg-black transition-all duration-300 ${showDropdown ? 'rotate-0' : 'rotate-0'}`}></span>
-            <span className={`absolute h-0.5 w-6 rounded-full bg-black transition-all duration-300 ${showDropdown ? 'rotate-0' : '-rotate-90'}`}></span>
+            <span className={`absolute h-0.5 w-6 rounded-full bg-blue-700 transition-all duration-300 ${showDropdown ? 'rotate-0' : 'rotate-0'}`}></span>
+            <span className={`absolute h-0.5 w-6 rounded-full bg-blue-700 transition-all duration-300 ${showDropdown ? 'rotate-0' : '-rotate-90'}`}></span>
           </button>
         </div>
       </div>
