@@ -1,6 +1,6 @@
 import os
 import xml.etree.ElementTree as ET
-from datetime import datetime
+from datetime import datetime, timedelta
 import pandas as pd
 from flask import Flask, request, jsonify
 from flask_cors import CORS
@@ -9,7 +9,7 @@ app = Flask(__name__)
 CORS(app)
 
 UPLOAD_FOLDER = '/Users/alexdang/ihealth.ai/uploads'
-OUTPUT_FOLDER = '/Users/alexdang/ihealth.ai/data'
+OUTPUT_FOLDER = '/Users/alexdang/ihealth.ai/cool'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 
@@ -82,6 +82,61 @@ def clean_data_by_date(file_path, start_date_str, end_date_str):
         print(f"Error processing XML (By Date): {str(e)}")
         return None
 
+# Function to clean and update sleep data with sequential dates
+def clean_sleep_analysis_data(file_path, start_date_str, end_date_str):
+    try:
+        tree = ET.parse(file_path)
+        root = tree.getroot()
+
+        start_filter_date = datetime.strptime(start_date_str, "%Y-%m-%d")
+        end_filter_date = datetime.strptime(end_date_str, "%Y-%m-%d")
+
+        cleaned_data = []
+        for record in root.findall('Record'):
+            record_type = record.get('type')
+            start_date = record.get('startDate')
+            end_date = record.get('endDate')
+
+            # Check if the record is a sleep analysis record
+            if record_type == "HKCategoryTypeIdentifierSleepAnalysis":
+                # Convert the startDate and endDate to datetime objects
+                start_date_dt = datetime.strptime(start_date, "%Y-%m-%d %H:%M:%S %z").replace(tzinfo=None)
+                end_date_dt = datetime.strptime(end_date, "%Y-%m-%d %H:%M:%S %z").replace(tzinfo=None)
+
+                if start_filter_date <= start_date_dt <= end_filter_date:
+                    sleep_duration = (end_date_dt - start_date_dt).total_seconds() / 3600  # in hours
+
+                    cleaned_data.append({
+                        'type': record_type,
+                        'startDate': start_date_dt,
+                        'endDate': end_date_dt,
+                        'sleepDurationHours': sleep_duration
+                    })
+
+        return cleaned_data
+
+    except Exception as e:
+        print(f"Error processing XML (Sleep): {str(e)}")
+        return None
+
+# Sequentially update sleep analysis dates
+def update_sleep_analysis_dates_sequentially(data, new_start_date_str):
+    new_start_date = datetime.strptime(new_start_date_str, "%Y-%m-%d")
+    time_deltas = data['endDate'] - data['startDate']
+
+    new_start_dates = [new_start_date]
+    new_end_dates = [new_start_date + time_deltas.iloc[0]]
+
+    for i in range(1, len(data)):
+        new_start_dates.append(new_end_dates[-1] + timedelta(seconds=1))
+        if new_start_dates[-1].date() == new_start_dates[-2].date():
+            new_start_dates[-1] += timedelta(days=1)
+        new_end_dates.append(new_start_dates[-1] + time_deltas.iloc[i])
+
+    data['startDate'] = new_start_dates
+    data['endDate'] = new_end_dates
+    return data
+
 @app.route('/upload', methods=['POST'])
 def upload_file():
     file = request.files.get('file')
@@ -90,63 +145,71 @@ def upload_file():
             # Save uploaded XML file
             file_path = os.path.join(UPLOAD_FOLDER, file.filename)
             file.save(file_path)
-
             print(f"File saved successfully at: {file_path}")
 
             # 1. Clean heart rate data
             start_date_str_heart_rate = "2024-09-19"
             end_date_str_heart_rate = "2024-09-20"
-
             cleaned_heart_rate_data = clean_heart_rate_data(file_path, start_date_str_heart_rate, end_date_str_heart_rate)
 
             if cleaned_heart_rate_data is None:
-                return jsonify({"error": "Error processing the uploaded XML file (Heart Rate)."}), 500
+                return jsonify({"error": "Error processing heart rate data."}), 500
 
             df_heart_rate = pd.DataFrame(cleaned_heart_rate_data)
-
             output_csv_heart_rate = os.path.join(UPLOAD_FOLDER, 'cleaned_heart_rate_data.csv')
             if not df_heart_rate.empty:
                 df_heart_rate.to_csv(output_csv_heart_rate, index=False)
-                print(f"Heart rate data successfully saved to {output_csv_heart_rate}")
             else:
-                return jsonify({"error": "No heart rate records found for the specified date range"}), 400
+                return jsonify({"error": "No heart rate records found for the date range."}), 400
 
-            # 2. Clean data by date
+            # 2. Clean non-sleep data by date
             start_date_str_data_by_date = "2024-08-23"
             end_date_str_data_by_date = "2024-09-19"
-
             cleaned_data_by_date = clean_data_by_date(file_path, start_date_str_data_by_date, end_date_str_data_by_date)
 
             if cleaned_data_by_date is None:
-                return jsonify({"error": "Error processing the uploaded XML file (By Date)."}), 500
+                return jsonify({"error": "Error processing non-sleep data."}), 500
 
             df_data_by_date = pd.DataFrame(cleaned_data_by_date)
-
             output_csv_data_by_date = os.path.join(UPLOAD_FOLDER, 'cleaned_data_by_date.csv')
             if not df_data_by_date.empty:
                 df_data_by_date.to_csv(output_csv_data_by_date, index=False)
-                print(f"Data by date successfully saved to {output_csv_data_by_date}")
             else:
-                return jsonify({"error": "No records found within the specified date range"}), 400
+                return jsonify({"error": "No non-sleep records found for the date range."}), 400
 
-            # 3. Combine both CSV files into a single file
+            # 3. Process and update sleep analysis data
+            start_date_str_sleep = "2020-01-07"
+            end_date_str_sleep = "2020-03-12"
+            new_start_date_sleep = "2024-08-23"
+            cleaned_sleep_data = clean_sleep_analysis_data(file_path, start_date_str_sleep, end_date_str_sleep)
+
+            if cleaned_sleep_data is None:
+                return jsonify({"error": "Error processing sleep data."}), 500
+
+            df_sleep = pd.DataFrame(cleaned_sleep_data)
+            updated_df_sleep = update_sleep_analysis_dates_sequentially(df_sleep, new_start_date_sleep)
+            output_csv_sleep = os.path.join(UPLOAD_FOLDER, 'updated_sleep_analysis_data.csv')
+            updated_df_sleep.to_csv(output_csv_sleep, index=False)
+
+            # 4. Combine heart rate, non-sleep, and sleep data
             combined_csv_output = os.path.join(OUTPUT_FOLDER, 'combined_updated_health_data.csv')
 
-            # Read the two CSVs
-            non_sleep_df = pd.read_csv(output_csv_data_by_date)
+            # Read the CSV files
             heart_rate_df = pd.read_csv(output_csv_heart_rate)
+            non_sleep_df = pd.read_csv(output_csv_data_by_date)
+            sleep_df = pd.read_csv(output_csv_sleep)
 
             # Combine them
-            combined_df = pd.concat([non_sleep_df, heart_rate_df], ignore_index=True)
+            combined_df = pd.concat([heart_rate_df, non_sleep_df, sleep_df], ignore_index=True)
 
-            # Save the combined CSV
+            # Save the combined data
             combined_df.to_csv(combined_csv_output, index=False)
-            print(f"Combined data successfully saved to {combined_csv_output}")
 
             return jsonify({
-                "message": "All files processed and combined successfully",
+                "message": "All data processed and combined successfully",
                 "csv_heart_rate": output_csv_heart_rate,
                 "csv_data_by_date": output_csv_data_by_date,
+                "csv_sleep_data": output_csv_sleep,
                 "csv_combined": combined_csv_output
             }), 200
 
