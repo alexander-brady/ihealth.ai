@@ -20,6 +20,7 @@ client = MongoClient(MONGO_URI)
 db = client['health_data']  # Name of your database
 collection = db['combined_health_metrics_Jamal']  # Name of your collection
 # Function to clean heart rate data
+# Function to clean heart rate data (also applicable for other data types)
 def clean_heart_rate_data(file_path, start_date_str, end_date_str):
     try:
         tree = ET.parse(file_path)  # Parse the file
@@ -34,6 +35,11 @@ def clean_heart_rate_data(file_path, start_date_str, end_date_str):
             record_value = record.get('value')
             start_date = record.get('startDate')
             end_date = record.get('endDate')
+
+            # Check if the record has a valid 'endDate'
+            if end_date is None:
+                print(f"Warning: Missing 'endDate' for record of type {record_type}")
+                continue  # Skip this record
 
             # Convert dates
             start_date_dt = datetime.strptime(start_date, "%Y-%m-%d %H:%M:%S %z")
@@ -54,7 +60,8 @@ def clean_heart_rate_data(file_path, start_date_str, end_date_str):
         print(f"Error processing XML (Heart Rate): {str(e)}")
         return None
 
-# Function to clean data by date range
+
+# Function to clean data by date range (handles missing endDate)
 def clean_data_by_date(file_path, start_date_str, end_date_str):
     try:
         tree = ET.parse(file_path)
@@ -70,6 +77,11 @@ def clean_data_by_date(file_path, start_date_str, end_date_str):
             start_date = record.get('startDate')
             end_date = record.get('endDate')
 
+            # Skip records without startDate or endDate
+            if not start_date or not end_date:
+                print(f"Warning: Missing 'startDate' or 'endDate' for record type {record_type}")
+                continue
+
             start_date_dt = datetime.strptime(start_date, "%Y-%m-%d %H:%M:%S %z").replace(tzinfo=None)
             end_date_dt = datetime.strptime(end_date, "%Y-%m-%d %H:%M:%S %z").replace(tzinfo=None)
 
@@ -78,8 +90,8 @@ def clean_data_by_date(file_path, start_date_str, end_date_str):
                 cleaned_data.append({
                     'type': record_type,
                     'value': record_value,
-                    'startDate': start_date,
-                    'endDate': end_date,
+                    'startDate': start_date_dt,
+                    'endDate': end_date_dt,
                 })
 
         return cleaned_data
@@ -87,6 +99,7 @@ def clean_data_by_date(file_path, start_date_str, end_date_str):
     except Exception as e:
         print(f"Error processing XML (By Date): {str(e)}")
         return None
+
 
 # Function to clean and update sleep data with sequential dates
 def clean_sleep_analysis_data(file_path, start_date_str, end_date_str):
@@ -100,30 +113,41 @@ def clean_sleep_analysis_data(file_path, start_date_str, end_date_str):
         cleaned_data = []
         for record in root.findall('Record'):
             record_type = record.get('type')
+            
+            # Only process sleep analysis records
+            if record_type != "HKCategoryTypeIdentifierSleepAnalysis":
+                continue
+
             start_date = record.get('startDate')
             end_date = record.get('endDate')
 
-            # Check if the record is a sleep analysis record
-            if record_type == "HKCategoryTypeIdentifierSleepAnalysis":
-                # Convert the startDate and endDate to datetime objects
-                start_date_dt = datetime.strptime(start_date, "%Y-%m-%d %H:%M:%S %z").replace(tzinfo=None)
-                end_date_dt = datetime.strptime(end_date, "%Y-%m-%d %H:%M:%S %z").replace(tzinfo=None)
+            # Skip records without startDate or endDate
+            if not start_date or not end_date:
+                print(f"Warning: Missing 'startDate' or 'endDate' for record type {record_type}")
+                continue
 
-                if start_filter_date <= start_date_dt <= end_filter_date:
-                    sleep_duration = (end_date_dt - start_date_dt).total_seconds() / 3600  # in hours
+            # Convert the startDate and endDate to datetime objects
+            start_date_dt = datetime.strptime(start_date, "%Y-%m-%d %H:%M:%S %z").replace(tzinfo=None)
+            end_date_dt = datetime.strptime(end_date, "%Y-%m-%d %H:%M:%S %z").replace(tzinfo=None)
 
-                    cleaned_data.append({
-                        'type': record_type,
-                        'startDate': start_date_dt,
-                        'endDate': end_date_dt,
-                        'sleepDurationHours': sleep_duration
-                    })
+            # Filter records within the specified date range
+            if start_filter_date <= start_date_dt <= end_filter_date:
+                sleep_duration = (end_date_dt - start_date_dt).total_seconds() / 3600  # in hours
+
+                # Append the cleaned data for sleep analysis records
+                cleaned_data.append({
+                    'type': record_type,
+                    'startDate': start_date_dt,
+                    'endDate': end_date_dt,
+                    'sleepDurationHours': sleep_duration
+                })
 
         return cleaned_data
 
     except Exception as e:
         print(f"Error processing XML (Sleep): {str(e)}")
         return None
+
 
 # Sequentially update sleep analysis dates
 def update_sleep_analysis_dates_sequentially(data, new_start_date_str):
@@ -155,7 +179,7 @@ def upload_file():
 
             # 1. Clean heart rate data
             start_date_str_heart_rate = "2024-09-19"
-            end_date_str_heart_rate = "2024-09-20"
+            end_date_str_heart_rate = "2024-09-19"
             cleaned_heart_rate_data = clean_heart_rate_data(file_path, start_date_str_heart_rate, end_date_str_heart_rate)
 
             if cleaned_heart_rate_data is None:
