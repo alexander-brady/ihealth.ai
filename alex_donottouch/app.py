@@ -9,7 +9,9 @@ app = Flask(__name__)
 CORS(app)
 
 UPLOAD_FOLDER = '/Users/alexdang/ihealth.ai/uploads'
+OUTPUT_FOLDER = '/Users/alexdang/ihealth.ai/data'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 
 # Function to clean heart rate data
 def clean_heart_rate_data(file_path, start_date_str, end_date_str):
@@ -127,10 +129,25 @@ def upload_file():
             else:
                 return jsonify({"error": "No records found within the specified date range"}), 400
 
+            # 3. Combine both CSV files into a single file
+            combined_csv_output = os.path.join(OUTPUT_FOLDER, 'combined_updated_health_data.csv')
+
+            # Read the two CSVs
+            non_sleep_df = pd.read_csv(output_csv_data_by_date)
+            heart_rate_df = pd.read_csv(output_csv_heart_rate)
+
+            # Combine them
+            combined_df = pd.concat([non_sleep_df, heart_rate_df], ignore_index=True)
+
+            # Save the combined CSV
+            combined_df.to_csv(combined_csv_output, index=False)
+            print(f"Combined data successfully saved to {combined_csv_output}")
+
             return jsonify({
-                "message": "Both files processed successfully",
+                "message": "All files processed and combined successfully",
                 "csv_heart_rate": output_csv_heart_rate,
-                "csv_data_by_date": output_csv_data_by_date
+                "csv_data_by_date": output_csv_data_by_date,
+                "csv_combined": combined_csv_output
             }), 200
 
         except Exception as e:
