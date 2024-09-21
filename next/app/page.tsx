@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import HeroImage from "./public/Humaaans - Wireframe.png"
 import Button from "./components/core/button";
+import Card from './components/core/card';
 import LandingNav from "./components/nav/landingNav";
 import MobileNav from "./components/nav/mobileNav";
 import SectionHeading from "./components/core/sectionHeading";
@@ -49,9 +50,11 @@ export default function Home() {
       <section id="benefits" className="w-full py-32">
         <div className="text-center max-w-screen-xl mx-auto">
           <SectionHeading text="Benefits of our personal assistant"/>
-            <div>
-              <div>
-
+            <div className="">
+              <div className="flex grid-cols-1 lg:grid-cols-3">
+                <Card heading="Accuracy" information="" />
+                <Card heading="Accuracy" information="" />
+                <Card heading="Accuracy" information="" />
               </div>
             </div>
         </div>
