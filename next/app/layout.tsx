@@ -32,7 +32,7 @@ export default function RootLayout({
       <body
         className={`${roboto.variable} ${sourceSerif.variable} antialiased`}
       >
-        <AuthProvider authUrl={process.env.NEXT_PUBLIC_AUTH_URL ?? ''}>
+        <AuthProvider authUrl={process.env.NEXT_PUBLIC_AUTH_URL!}>
           {children}
         </AuthProvider>
       </body>

@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@propelauth/nextjs": "^0.1.9",
+    "@propelauth/node": "^2.1.22",
     "@propelauth/react": "^2.0.22",
     "axios": "^1.7.7",
     "ihealth.ai": "file:",
