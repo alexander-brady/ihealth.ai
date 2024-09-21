@@ -34,3 +34,4 @@ if __name__ == "__main__":
     # Print the cleaned output
     for record in cleaned_output:
         print(record)
+        
