@@ -7,5 +7,6 @@ cleaned_data_by_date.csv
 cleaned_heart_rate_data.csv
 aggregated_heart_rate_data.csv
 cleaned_data_by_date_step_analysis_with_insights.json
-data/
+data/   
 .DS_Store
+cool/cool/

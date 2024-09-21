@@ -9,7 +9,7 @@ interface ButtonProps {
 }
 
 export default function Button({ text, stylingClass, pageRef }: ButtonProps) {
-  const defaultStyles = "rounded-md font-black cursor-pointer transition duration-300 hover:bg-slate-200";
+  const defaultStyles = "rounded-md font-black cursor-pointer transition duration-300";
 
 
   return (
