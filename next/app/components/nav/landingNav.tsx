@@ -23,6 +23,7 @@ export default function LandingNav() {
         <Button 
           text="Sign In!" 
           stylingClass="bg-slate-100 py-3 px-5 my-2 mr-5 xl:mr-0 rounded-md font-black cursor-pointer transition delay-50 hover:bg-slate-200"
+          pageRef="/login"
         />
       </div>
     </nav>

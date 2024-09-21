@@ -8,6 +8,10 @@ export default function Home() {
     <div>
       <LandingNav />
       <MobileNav />
+
+      <section id="hero" className="">
+        
+      </section>
     </div>
   );
 }

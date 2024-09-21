@@ -37,6 +37,7 @@ export default function MobileNav() {
             <Button 
               text="Sign In!" 
               stylingClass="w-full bg-slate-100 py-2 mb-4 ml-5 rounded-md font-black cursor-pointer transition delay-50 hover:bg-slate-200"
+              pageRef="/login"
             />
           </div>
         </div>
