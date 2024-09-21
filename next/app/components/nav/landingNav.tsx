@@ -22,7 +22,7 @@ export default function LandingNav() {
         </div>
         <Button 
           text="Sign In!" 
-          stylingClass="bg-slate-100 py-3 px-5 my-2 mr-5 xl:mr-0"
+          stylingClass="text-white bg-blue-700 hover:bg-blue-800 py-3 px-5 my-2 mr-5 xl:mr-0"
           pageRef="/login"
         />
       </div>

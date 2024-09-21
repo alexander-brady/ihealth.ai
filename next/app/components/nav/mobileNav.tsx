@@ -36,7 +36,7 @@ export default function MobileNav() {
           <div className="max-w-[8rem] text-center">
             <Button 
               text="Sign In!" 
-              stylingClass="w-full bg-slate-100 py-2 mb-4 ml-5"
+              stylingClass="w-full text-white bg-blue-700 hover:bg-blue-800 py-2 mb-4 ml-5"
               pageRef="/login"
             />
           </div>
