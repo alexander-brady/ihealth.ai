@@ -20,10 +20,10 @@ export default function Home() {
         <div className="max-w-screen-xl mx-auto">
           <div className="relative grid grid-cols-0 md:grid-cols-2 gap-8 mx-5 xl:mx-20">
             <div className="flex flex-col mt-48 text-center md:text-left">
-              <SectionHeading text="Your digital AI health assistant!"/>
+              <SectionHeading text="Meet your digital AI health assistant"/>
               <SectionSubText text="Fight off potential health issues in the long run by gaining insight through our AI doctor!"/>
               <div className="flex flex-col items-center md:items-start">
-                <Button text="Start Chatting!" stylingClass="py-4 px-4 bg-slate-100 mt-8 text-center max-w-48" pageRef="/login" />
+                <Button text="Start Chatting" stylingClass="py-4 px-4 bg-slate-100 mt-8 text-center max-w-48" pageRef="/login" />
               </div>
             </div>
             <div className="hidden md:block">

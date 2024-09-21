@@ -7,7 +7,7 @@ export default function LandingNav() {
     <nav className="w-full hidden md:block">
       <div className="flex justify-between items-center m-auto max-w-screen-xl">
         <div className="ml-5 xl:ml-0">
-          <h1 className="text-3xl font-black">iHealth</h1>
+          <h1 className="text-3xl font-black">iHealth<span className="text-blue-800">.ai</span></h1>
         </div>
         <div>
           <ul className="flex flex-row space-x-6">

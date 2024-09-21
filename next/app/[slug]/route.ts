@@ -3,7 +3,7 @@ import {NextRequest} from "next/server";
 
 // postLoginRedirectPathFn is optional, but if you want to redirect the user to a different page after login, you can do so here.
 const routeHandlers = getRouteHandlers({
-  postLoginRedirectPathFn: (req: NextRequest) => {
+  postLoginRedirectPathFn: (_: NextRequest) => {
     return "/"
   }
 })
