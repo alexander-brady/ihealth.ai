@@ -1,14 +1,13 @@
-
+'use client';
 
 interface ButtonProps {
   text:string,
+  stylingClass: string,
 }
 
-
-
-export default function Button({ text }: ButtonProps) {
+export default function Button({ text, stylingClass }: ButtonProps) {
   return (
-    <div className="bg-slate-100 py-5 px-10">
+    <div className={stylingClass}>
       {text}
     </div>
   );
