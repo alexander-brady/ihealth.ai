@@ -10,9 +10,9 @@
   },
   "dependencies": {
     "ihealth.ai": "file:",
-    "next": "14.2.13",
-    "react": "^18",
-    "react-dom": "^18"
+    "next": "^14.2.13",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
   },
   "devDependencies": {
     "@types/node": "^20",
