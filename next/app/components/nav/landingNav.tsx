@@ -13,7 +13,7 @@ export default function LandingNav() {
           <ul className="flex flex-row space-x-6">
           {['About', 'Benefits', 'Questions'].map((item) => (
               <li key={item}>
-                <a href={`#${item.toLowerCase()}`} className="block text-xl font-black duration-300 hover:text-blue-600 transition-colors">
+                <a href={`#${item.toLowerCase()}`} className="block text-xl font-black duration-300 hover:text-blue-800 transition-colors">
                   {item}
                 </a>
               </li>
