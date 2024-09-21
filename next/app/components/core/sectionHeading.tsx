@@ -6,7 +6,7 @@ interface SectionHeadingProps {
 
 export default function SectionHeading({text}: SectionHeadingProps){
   return(
-    <h1 className="font-roboto text-xl md:text-3xl">
+    <h1 className="font-roboto text-4xl md:text-5xl font-black">
       {text}
     </h1>
   );

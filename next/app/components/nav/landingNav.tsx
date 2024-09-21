@@ -13,7 +13,7 @@ export default function LandingNav() {
           <ul className="flex flex-row space-x-6">
           {['About', 'Benefits', 'Questions'].map((item) => (
               <li key={item}>
-                <a href={`#${item.toLowerCase()}`} className="block text-xl font-black hover:text-blue-600 transition-colors">
+                <a href={`#${item.toLowerCase()}`} className="block text-xl font-black duration-300 hover:text-blue-600 transition-colors">
                   {item}
                 </a>
               </li>
@@ -22,7 +22,7 @@ export default function LandingNav() {
         </div>
         <Button 
           text="Sign In!" 
-          stylingClass="bg-slate-100 py-3 px-5 my-2 mr-5 xl:mr-0 rounded-md font-black cursor-pointer transition delay-50 hover:bg-slate-200"
+          stylingClass="bg-slate-100 py-3 px-5 my-2 mr-5 xl:mr-0"
           pageRef="/login"
         />
       </div>

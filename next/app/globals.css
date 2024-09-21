@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  border: 2px dotted red;
+* {
+  scroll-behavior: smooth;
+}
+
+  :root{
+  border: 1px solid red;
 }
