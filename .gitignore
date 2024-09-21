@@ -5,3 +5,4 @@ apple_health_export/
 aggregated_data.csv
 cleaned_data_by_date.csv
 cleaned_heart_rate_data.csv
+aggregated_heart_rate_data.csv
