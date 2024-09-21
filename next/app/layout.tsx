@@ -29,7 +29,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <AuthProvider authUrl={process.env.NEXT_PUBLIC_AUTH_URL}>
+        <AuthProvider authUrl={process.env.NEXT_PUBLIC_AUTH_URL ?? ''}>
           {children}
         </AuthProvider>
       </body>
