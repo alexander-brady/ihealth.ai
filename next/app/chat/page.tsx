@@ -71,7 +71,7 @@ export default function Chat() {
         <textarea
           value={input}
           onChange={handleInputChange}
-          onKeyPress={handleKeyPress}
+          onKeyDown={handleKeyPress}
           placeholder="Type your message..."
           style={styles.input}
           rows={2}
