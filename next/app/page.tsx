@@ -49,12 +49,14 @@ export default function Home() {
 
       <section id="benefits" className="w-full py-32">
         <div className="text-center max-w-screen-xl mx-auto">
-          <SectionHeading text="Benefits of our personal assistant"/>
+          <div className="mx-5 xl:mx-0">
+            <SectionHeading text="Benefits of our personal assistant"/>
+          </div>
             <div className="">
-              <div className="flex grid-cols-1 lg:grid-cols-3">
-                <Card heading="Accuracy" information="" />
-                <Card heading="Accuracy" information="" />
-                <Card heading="Accuracy" information="" />
+              <div className="grid lg:grid-cols-3 gap-8 mt-20 mx-5 xl:mx-0">
+                <Card heading="Accuracy" information="Lorem ipsum odor amet, consectetuer adipiscing elit. Magna ridiculus condimentum aenean penatibus tempus imperdiet justo vulputate. Mus eget pharetra mattis rhoncus vulputate neque hac." />
+                <Card heading="Accuracy" information="Lorem ipsum odor amet, consectetuer adipiscing elit. Magna ridiculus condimentum aenean penatibus tempus imperdiet justo vulputate. Mus eget pharetra mattis rhoncus vulputate neque hac." />
+                <Card heading="Accuracy" information="Lorem ipsum odor amet, consectetuer adipiscing elit. Magna ridiculus condimentum aenean penatibus tempus imperdiet justo vulputate. Mus eget pharetra mattis rhoncus vulputate neque hac." />
               </div>
             </div>
         </div>
@@ -63,9 +65,26 @@ export default function Home() {
       <section id="questions" className="w-full py-32">
         <div className="text-center max-w-screen-xl mx-auto">
           <SectionHeading text="FAQs"/>
-
+            
         </div>
       </section>
+
+      <section className="w-full py-32">
+        <div className="max-w-screen-xl bg-slate-100 rounded-3xl m-auto p-32 shadow-md">
+          <div className="flex flex-col text-center items-center p-10">
+            <SectionHeading text="Go down your health journey today!"/>
+            <Button text="Start Chatting!" stylingClass="py-4 px-4 bg-slate-100 mt-8 text-center max-w-48" pageRef="/login" />
+          </div>
+        </div>
+      </section>
+
+      <footer className="w-full bg-slate-100 rounded-tl-[5rem] rounded-tr-[5rem]">
+        <div className="max-w-screen-xl m-auto p-10 flex flex-col text-center ">
+          <SectionHeading text="iHealth" />
+          <SectionSubText text="Moving towards a better future!"/>
+          <p className="font-serif">© 2024 iHealth INC</p>
+        </div>
+      </footer>
     </div>
   );
 }
