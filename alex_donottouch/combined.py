@@ -2,7 +2,7 @@ import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta
 import pandas as pd
 
-# Function to clean all non-sleep health data (like heart rate, step count) from the XML
+# Function to clean all non-sleep health data (like step count) from the XML
 def clean_data_by_date(file_path, start_date_str, end_date_str):
     # Parse the XML from the file
     tree = ET.parse(file_path)
@@ -12,7 +12,7 @@ def clean_data_by_date(file_path, start_date_str, end_date_str):
     start_filter_date = datetime.strptime(start_date_str, "%Y-%m-%d")
     end_filter_date = datetime.strptime(end_date_str, "%Y-%m-%d")
 
-    # Extract relevant fields for all records except sleep analysis
+    # Extract relevant fields for all records except sleep analysis and heart rate
     cleaned_data = []
     for record in root.findall('Record'):
         record_type = record.get('type')
@@ -20,12 +20,12 @@ def clean_data_by_date(file_path, start_date_str, end_date_str):
         start_date = record.get('startDate')
         end_date = record.get('endDate')
 
-        # Convert the startDate and endDate to datetime objects, then remove timezone info (offset-naive)
+        # Convert the startDate and endDate to datetime objects, then remove timezone info
         start_date_dt = datetime.strptime(start_date, "%Y-%m-%d %H:%M:%S %z").replace(tzinfo=None)
         end_date_dt = datetime.strptime(end_date, "%Y-%m-%d %H:%M:%S %z").replace(tzinfo=None)
 
-        # Check if the record is not sleep data and falls within the date range
-        if record_type != "HKCategoryTypeIdentifierSleepAnalysis" and start_filter_date <= start_date_dt <= end_filter_date:
+        # Check if the record is not sleep data or heart rate and falls within the date range
+        if record_type != "HKCategoryTypeIdentifierSleepAnalysis" and record_type != "HKQuantityTypeIdentifierHeartRate" and start_filter_date <= start_date_dt <= end_filter_date:
             cleaned_data.append({
                 'type': record_type,
                 'value': record_value,
@@ -35,7 +35,7 @@ def clean_data_by_date(file_path, start_date_str, end_date_str):
 
     return cleaned_data
 
-# Function to clean sleep analysis data and shift dates
+# Function to clean and shift sleep analysis data
 def clean_sleep_analysis_data_and_shift(file_path, start_date_str, end_date_str, new_start_date_str):
     # Parse the XML from the file
     tree = ET.parse(file_path)
@@ -94,19 +94,56 @@ def clean_sleep_analysis_data_and_shift(file_path, start_date_str, end_date_str,
 
     return df
 
-# Combined function that processes non-sleep and sleep data separately
-def clean_and_update_health_data(xml_file_path, non_sleep_start_date_str, non_sleep_end_date_str, sleep_start_date_str, sleep_end_date_str, new_sleep_start_date_str):
+# Function to clean heart rate data with specific date range
+def clean_heart_rate_data(file_path, start_date_str, end_date_str):
+    # Parse the XML from the file
+    tree = ET.parse(file_path)
+    root = tree.getroot()
+
+    # Define the start and end dates for filtering
+    start_filter_date = datetime.strptime(start_date_str, "%Y-%m-%d")
+    end_filter_date = datetime.strptime(end_date_str, "%Y-%m-%d")
+
+    # Extract relevant fields for only heart rate records
+    cleaned_data = []
+    for record in root.findall('Record'):
+        record_type = record.get('type')
+        record_value = record.get('value')
+        start_date = record.get('startDate')
+        end_date = record.get('endDate')
+
+        # Convert the startDate and endDate to datetime objects, removing timezone info
+        start_date_dt = datetime.strptime(start_date, "%Y-%m-%d %H:%M:%S %z").replace(tzinfo=None)
+        end_date_dt = datetime.strptime(end_date, "%Y-%m-%d %H:%M:%S %z").replace(tzinfo=None)
+
+        # Check if the record is a heart rate record and falls within the date range
+        if record_type == "HKQuantityTypeIdentifierHeartRate" and start_filter_date <= start_date_dt <= end_filter_date:
+            cleaned_data.append({
+                'type': record_type,
+                'value': record_value,
+                'startDate': start_date_dt,
+                'endDate': end_date_dt,
+            })
+
+    return cleaned_data
+
+# Combined function that processes non-sleep, heart rate, and sleep data separately
+def clean_and_update_health_data(xml_file_path, non_sleep_start_date_str, non_sleep_end_date_str, sleep_start_date_str, sleep_end_date_str, new_sleep_start_date_str, heart_rate_start_date_str, heart_rate_end_date_str):
     # Clean non-sleep health data (keeps original dates)
     cleaned_non_sleep_data = clean_data_by_date(xml_file_path, non_sleep_start_date_str, non_sleep_end_date_str)
+
+    # Clean heart rate data (with specific heart rate date range)
+    cleaned_heart_rate_data = clean_heart_rate_data(xml_file_path, heart_rate_start_date_str, heart_rate_end_date_str)
 
     # Clean and shift sleep analysis data
     cleaned_sleep_data = clean_sleep_analysis_data_and_shift(xml_file_path, sleep_start_date_str, sleep_end_date_str, new_sleep_start_date_str)
     
-    # Convert cleaned non-sleep data to a DataFrame
+    # Convert cleaned non-sleep data and heart rate data to DataFrames
     non_sleep_df = pd.DataFrame(cleaned_non_sleep_data)
+    heart_rate_df = pd.DataFrame(cleaned_heart_rate_data)
     
-    # Combine sleep data and non-sleep data
-    final_df = pd.concat([cleaned_sleep_data, non_sleep_df], ignore_index=True)
+    # Combine all datasets: non-sleep, heart rate, and sleep data
+    final_df = pd.concat([cleaned_sleep_data, non_sleep_df, heart_rate_df], ignore_index=True)
 
     # Save the combined data to CSV
     output_path = "/Users/alexdang/ihealth.ai/data/combined_updated_health_data.csv"
@@ -128,5 +165,9 @@ if __name__ == "__main__":
     # Define the new start date for updating the sleep analysis records
     new_sleep_start_date_str = "2024-08-23"
     
+    # Define the specific date range for heart rate data
+    heart_rate_start_date_str = "2024-09-19"
+    heart_rate_end_date_str = "2024-09-20"
+    
     # Clean and update all health data
-    clean_and_update_health_data(xml_file_path, non_sleep_start_date_str, non_sleep_end_date_str, sleep_start_date_str, sleep_end_date_str, new_sleep_start_date_str)
+    clean_and_update_health_data(xml_file_path, non_sleep_start_date_str, non_sleep_end_date_str, sleep_start_date_str, sleep_end_date_str, new_sleep_start_date_str, heart_rate_start_date_str, heart_rate_end_date_str)
