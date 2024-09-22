@@ -16,6 +16,7 @@
     "@propelauth/react": "^2.0.22",
     "@radix-ui/react-avatar": "^1.1.0",
     "axios": "^1.7.7",
+    "clsx": "^2.1.1",
     "concurrently": "^9.0.1",
     "ihealth.ai": "file:",
     "lucide-react": "^0.445.0",
