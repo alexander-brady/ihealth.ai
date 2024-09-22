@@ -14,7 +14,7 @@ OUTPUT_FOLDER = '/Users/alexdang/ihealth.ai/cool'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 
-MONGO_URI = "mongodb+srv://alexjbrady66:dLpyb10SKl8FHRNX@pennapps.wzkt4.mongodb.net/?retryWrites=true&w=majority&appName=PennApps"
+MONGO_URI = ""
 # Initialize MongoDB client
 client = MongoClient(MONGO_URI)
 db = client['health_data']  # Name of your database
