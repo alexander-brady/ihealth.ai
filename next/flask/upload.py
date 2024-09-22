@@ -14,7 +14,7 @@ OUTPUT_FOLDER = '/Users/alexdang/ihealth.ai/cool'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 
-MONGO_URI = os.getenv("MONGO_URI")
+MONGO_URI = "mongodb+srv://alexjbrady66:dLpyb10SKl8FHRNX@pennapps.wzkt4.mongodb.net/?retryWrites=true&w=majority&appName=PennApps"
 if not MONGO_URI:
     raise ValueError("MONGO_URI environment variable not found.")
 # Initialize MongoDB client
