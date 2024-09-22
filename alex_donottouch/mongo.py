@@ -5,7 +5,7 @@ import numpy as np
 app = Flask(__name__)
 
 # Initialize MongoDB client
-MONGO_URI = "mongodb+srv://alexjbrady66:dLpyb10SKl8FHRNX@pennapps.wzkt4.mongodb.net/?retryWrites=true&w=majority&appName=PennApps"
+
 client = MongoClient(MONGO_URI)
 db = client['health_data']
 heart_rate_collection = db['combined_health_metrics_Pokemon']
