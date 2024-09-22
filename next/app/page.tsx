@@ -67,7 +67,7 @@ export default function Home() {
                 <Insight />
               </Card>
 
-              <Card heading="Data-Driven Decisions" information="With AI-powered analysis, iHealth.ai helps you make more informed decisions about your health. By offering clear insights into your trends and deviations, our assistant empowers you to have more meaningful conversations with healthcare professionals.">
+              <Card heading="Data-Driven Decisionmaking" information="With AI-powered analysis, iHealth.ai helps you make more informed decisions about your health. By offering clear insights into your trends and deviations, our assistant empowers you to have more meaningful conversations with healthcare professionals.">
                 <DataIcon />
               </Card>
             </div>
@@ -92,7 +92,7 @@ export default function Home() {
         <div className="max-w-screen-xl bg-slate-100 rounded-3xl m-auto py-32 px-16">
           <div className="flex flex-col text-center items-center">
             <SectionHeading text="Go down your health journey today!" />
-            <Button text="Start Chatting!" stylingClass="py-4 px-4 text-white bg-blue-700 hover:bg-blue-800 mt-8 text-center max-w-48" pageRef="/login" />
+            <Button text="Start Chatting!" stylingClass="py-4 px-4 text-white bg-blue-700 hover:bg-blue-800 mt-8 text-center max-w-48" pageRef="/chat" />
           </div>
         </div>
       </section>

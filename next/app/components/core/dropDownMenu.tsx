@@ -31,7 +31,7 @@ export default function DropDownMenu({question, answer}: DropDownMenuProps){
       
       {showDropdown && (
         <div className="bg-slate-100 text-left rounded-bl-md rounded-br-md">
-          <div className="p-4">
+          <div className="pl-4 pr-4 pb-4 -mt-4">
             <SectionSubText text={answer} />
           </div>
         </div>

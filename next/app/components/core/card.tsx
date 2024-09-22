@@ -17,7 +17,9 @@ export default function Card({heading, information, children}: CardProps){
         {children}
       </div>
       <div className="p-6 text-center">
-        <SectionHeading text={heading} />
+        <h1 className="font-roboto text-3xl md:text-4xl font-black">
+          {heading}
+        </h1>
         <SectionSubText text={information} />
       </div> 
     </div>

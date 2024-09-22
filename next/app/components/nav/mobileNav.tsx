@@ -3,8 +3,12 @@
 import { useState } from "react";
 import Button from "../core/button";
 
+import { useUser } from "@propelauth/nextjs/client";
+
 export default function MobileNav() {
   const [showDropdown, setShowDropdown] = useState(false);
+
+  const { user } = useUser();
 
   const Callback = () => {
     setShowDropdown((prev) => !prev);
@@ -16,7 +20,7 @@ export default function MobileNav() {
           <div className="ml-5">
             <h1 className="text-3xl font-black">iHealth<span className="text-blue-800">.ai</span></h1>
           </div>
-          <button onClick={Callback} className="flex flex-col mr-5 my-2 h-12 w-12 bg-slate-100 rounded-full justify-center items-center relative overflow-hidden">
+          <button onClick={Callback} className="flex flex-col mr-5 my-3 h-12 w-12 bg-slate-100 rounded-full justify-center items-center relative overflow-hidden">
             <span className={`h-0.5 w-6 my-1 rounded-full bg-blue-800 transition ease transform duration-300 ${showDropdown ? "rotate-45 translate-y-2.5" : ""}`}></span>
             <span className={`h-0.5 w-6 my-1 rounded-full bg-blue-800 transition ease transform duration-300 ${showDropdown ? "opacity-0" : "opacity-100"}`}></span>
             <span className={`h-0.5 w-6 my-1 rounded-full bg-blue-800 transition ease transform duration-300 ${showDropdown ? "-rotate-45 -translate-y-2.5" : ""}`}></span>
@@ -34,11 +38,13 @@ export default function MobileNav() {
             ))}
           </ul>
           <div className="max-w-[8rem] text-center">
-            <Button 
-              text="Sign In!" 
-              stylingClass="w-full text-white bg-blue-700 hover:bg-blue-800 py-2 mb-4 ml-5"
-              pageRef="/login"
-            />
+            { !user &&
+              <Button 
+                text="Sign In!" 
+                stylingClass="text-white bg-blue-700 hover:bg-blue-800 py-3 px-5 my-2 mr-5 xl:mr-0"
+                pageRef="/api/auth/login"
+              />
+            }
           </div>
         </div>
       )}

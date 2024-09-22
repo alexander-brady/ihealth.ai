@@ -16,7 +16,7 @@ export default function ChatBubble({ message }: ChatBubbleProps) {
         </div>
       )}
       <div
-        className={`max-w-[80%] p-2 rounded-lg ${
+        className={`max-w-[80%] p-3 rounded-lg ${
           isUser ? 'bg-blue-200' : 'bg-gray-200'
         }`}
       >

@@ -1,13 +1,17 @@
 'use client';
 
+import {useUser} from "@propelauth/nextjs/client";
+
 import Button from "../core/button";
 
 export default function LandingNav() {
+  const {user} = useUser()
+
   return (
     <nav className="w-full hidden md:block">
       <div className="flex justify-between items-center m-auto max-w-screen-xl">
         <div className="ml-5 xl:ml-0">
-          <h1 className="text-3xl font-black">iHealth<span className="text-blue-800">.ai</span></h1>
+          <h1 className="text-3xl font-black">iHealth<span className="text-blue-800 mt-2">.ai</span></h1>
         </div>
         <div>
           <ul className="flex flex-row space-x-6">
@@ -19,12 +23,13 @@ export default function LandingNav() {
               </li>
             ))}
           </ul>
-        </div>
+        </div> { !user &&
         <Button 
           text="Sign In!" 
           stylingClass="text-white bg-blue-700 hover:bg-blue-800 py-3 px-5 my-2 mr-5 xl:mr-0"
-          pageRef="/login"
+          pageRef="/api/auth/login"
         />
+        }
       </div>
     </nav>
   );
