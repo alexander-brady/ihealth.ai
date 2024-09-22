@@ -23,7 +23,7 @@ export default function Home() {
               <h1 className="font-roboto text-4xl md:text-5xl font-black">Meet your digital <span className="text-blue-800">AI</span> health assistant</h1>
               <SectionSubText text="Fight off potential health issues in the long run by gaining insight through our AI doctor!"/>
               <div className="flex flex-col items-center md:items-start">
-                <Button text="Start Chatting" stylingClass="py-4 px-4 text-white bg-blue-700 hover:bg-blue-800 mt-8 text-center max-w-48" pageRef="/login" />
+                <Button text="Start Chatting" stylingClass="py-4 px-4 text-white bg-blue-700 hover:bg-blue-800 mt-8 text-center max-w-48" pageRef="/chat" />
               </div>
             </div>
             <div className="hidden md:block">
@@ -43,7 +43,7 @@ export default function Home() {
         <div className="text-center max-w-screen-xl mx-auto">
           <h1 className="font-roboto text-4xl md:text-5xl font-black">Why we made iHealth<span className="text-blue-800">.ai</span></h1>
           <div className="mt-10 mx-5 xl:mx-0">
-            <SectionSubText text="Lorem ipsum odor amet, consectetuer adipiscing elit. Tempus congue ad ut imperdiet; quisque habitant. Metus ligula suscipit libero, ultrices metus ornare. Tortor turpis viverra mollis cubilia mattis. Condimentum porttitor enim mollis ut, aliquet mattis? Lorem urna efficitur aptent; viverra dolor ex. Egestas ornare non, magnis suscipit est interdum donec integer iaculis. Curabitur pulvinar dictum velit penatibus consequat. Arcu faucibus placerat dignissim amet bibendum pellentesque." />
+            <SectionSubText text="At iHealth.ai, we believe that understanding your health should be simple, personalized, and proactive. With the increasing ability to track vital health metrics through devices like the iPhone, we wanted to empower individuals to make the most of their data. That’s why we built iHealth.ai—to bridge the gap between raw health data and actionable insights." />
           </div>
         </div>
       </section>
@@ -55,9 +55,9 @@ export default function Home() {
           </div>
             <div className="">
               <div className="grid lg:grid-cols-3 gap-8 mt-20 mx-5 xl:mx-0">
-                <Card heading="Accuracy" information="Lorem ipsum odor amet, consectetuer adipiscing elit. Magna ridiculus condimentum aenean penatibus tempus imperdiet justo vulputate. Mus eget pharetra mattis rhoncus vulputate neque hac." />
-                <Card heading="Accuracy" information="Lorem ipsum odor amet, consectetuer adipiscing elit. Magna ridiculus condimentum aenean penatibus tempus imperdiet justo vulputate. Mus eget pharetra mattis rhoncus vulputate neque hac." />
-                <Card heading="Accuracy" information="Lorem ipsum odor amet, consectetuer adipiscing elit. Magna ridiculus condimentum aenean penatibus tempus imperdiet justo vulputate. Mus eget pharetra mattis rhoncus vulputate neque hac." />
+                <Card heading="Early Detection of Health Issues" information="Our AI-powered assistant analyzes your health data in real-time, flagging potential abnormalities that might go unnoticed. This early detection helps you address concerns before they become serious, giving you peace of mind and control over your well-being." />
+                <Card heading="Personalized Health Insights" information="iHealth.ai tailors its insights specifically to your health patterns, offering recommendations and trends based on your unique data. Instead of generic advice, you’ll receive information relevant to your lifestyle and personal health journey." />
+                <Card heading="Data-Driven Decisions" information="With AI-powered analysis, iHealth.ai helps you make more informed decisions about your health. By offering clear insights into your trends and deviations, our assistant empowers you to have more meaningful conversations with healthcare professionals." />
               </div>
             </div>
         </div>
@@ -67,11 +67,15 @@ export default function Home() {
         <div className="text-center max-w-screen-xl mx-auto">
           <SectionHeading text="FAQs"/>
             <div className="mx-5 xl:mx-0">
-              <DropDownMenu question="FAQ" answer="Lorem ipsum odor amet, consectetuer adipiscing elit. Magna ridiculus condimentum aenean penatibus tempus imperdiet justo vulputate. Mus eget pharetra mattis rhoncus vulputate neque hac."/>
-              <DropDownMenu question="FAQ" answer="Lorem ipsum odor amet, consectetuer adipiscing elit. Magna ridiculus condimentum aenean penatibus tempus imperdiet justo vulputate. Mus eget pharetra mattis rhoncus vulputate neque hac."/>
-              <DropDownMenu question="FAQ" answer="Lorem ipsum odor amet, consectetuer adipiscing elit. Magna ridiculus condimentum aenean penatibus tempus imperdiet justo vulputate. Mus eget pharetra mattis rhoncus vulputate neque hac."/>
-              <DropDownMenu question="FAQ" answer="Lorem ipsum odor amet, consectetuer adipiscing elit. Magna ridiculus condimentum aenean penatibus tempus imperdiet justo vulputate. Mus eget pharetra mattis rhoncus vulputate neque hac."/>
-              <DropDownMenu question="FAQ" answer="Lorem ipsum odor amet, consectetuer adipiscing elit. Magna ridiculus condimentum aenean penatibus tempus imperdiet justo vulputate. Mus eget pharetra mattis rhoncus vulputate neque hac."/>
+              <DropDownMenu question="What data does iHealth.ai use from my iPhone?" answer="iHealth.ai accesses your iPhone’s health data, including metrics such as heart rate, sleep patterns, activity levels, steps, and other available health indicators. All data is securely processed to provide personalized insights, and privacy is our top priority."/>
+              
+              <DropDownMenu question="How does iHealth.ai analyze my health data?" answer="Our platform uses advanced AI algorithms trained to detect patterns, irregularities, and trends in your health data. By comparing your data to both medical guidelines and past trends in your own metrics, iHealth.ai helps identify potential issues before they become major concerns."/>
+              
+              <DropDownMenu question="Can iHealth.ai diagnose medical conditions?" answer="No, iHealth.ai is not a substitute for professional medical advice or diagnosis. Our tool provides insights and flags potential areas of concern, but it’s important to consult with a healthcare professional for any medical diagnosis or treatment."/>
+              
+              <DropDownMenu question="How often should I use iHealth.ai?" answer="You can use iHealth.ai as often as you'd like. We recommend using it daily or weekly to monitor trends in your health data. This regular use can help detect any abnormalities or changes over time."/>
+              
+              <DropDownMenu question="How accurate is the analysis provided by iHealth.ai?" answer="Our AI is designed to offer highly accurate insights based on the data you provide. However, it is important to note that the quality and completeness of the data, as well as the complexity of health, mean that our insights are not infallible. Always consult a medical expert for serious concerns."/>
             </div>
         </div>
       </section>
