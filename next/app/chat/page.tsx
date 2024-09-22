@@ -8,7 +8,7 @@ type Message = {
   text: string;
 };
 
-export default function Chat() {
+export default function Home() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -22,7 +22,7 @@ export default function Chat() {
 
     try {
       // Send the user's message to the Flask backend
-      const response = await axios.post<{ text: string }>('api/send-message', {
+      const response = await axios.post<{ text: string }>('flask/send-message', {
         message: input,
       });
       console.log(response.data);
@@ -71,7 +71,7 @@ export default function Chat() {
         <textarea
           value={input}
           onChange={handleInputChange}
-          onKeyDown={handleKeyPress}
+          onKeyPress={handleKeyPress}
           placeholder="Type your message..."
           style={styles.input}
           rows={2}
