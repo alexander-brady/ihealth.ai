@@ -1,8 +1,8 @@
 # iHealth.ai
-## Created by Alexander Brady, Alexandre Payumo, Hung Que Dang, and Jordan Yin
+### Created by Alexander Brady, Alexandre Payumo, Hung Que Dang, and Jordan Yin
 
 ## Inspiration
-The U.S. healthcare system is known for being inaccessible and expensive, with many people neglecting their health until it's too late. We wanted to create a proactive solution that uses the data we already generate through devices like iPhones and Apple Watches. Our goal was to provide people with daily insights into their health, helping them make informed decisions about whether to visit a doctor or change their habits before more serious issues arise.
+92% of Americans don’t undergo routine health screenings. In fact, missed preventative opportunities cost US healthcare 55 billion dollars every year. We wanted to create a proactive solution that uses the data we already generate through devices like iPhones and Apple Watches. Our goal was to provide people with daily insights into their health, helping them make informed decisions about whether to visit a doctor or change their habits before more serious issues arise.
 
 ## Description of our Web App
 iHealth.ai automatically collects daily health data, such as heart rate, sleep analysis, walking distance, and headphone audio exposure, from Apple devices. It then processes this data and feeds it into a powerful language model (LLM). The LLM analyzes patterns and provides actionable insights, recommending whether you should seek medical advice or take steps to improve your health.
@@ -16,11 +16,12 @@ iHealth.ai automatically collects daily health data, such as heart rate, sleep a
 ### Backend
 - MongoDB
 - Flask
-- ChatGPT
+- GPT-4o
+- PropelAuth
 - LangChain
 
 # How we built it
-We used Propel Auth0 to authenticate users securely and Vercel to host our web application. Apple HealthKit APIs were used to gather health data from users' iPhones and Apple Watches, such as heart rate, sleep duration, walking distance, and audio exposure. This data is stored securely in MongoDB. We then used OpenAI's API to analyze the data, providing users with feedback based on their health trends.
+We used PropelAuth to authenticate users securely and Vercel to host our web application. Apple HealthKit APIs were used to gather health data from users' iPhones and Apple Watches, such as heart rate, sleep duration, walking distance, and audio exposure. This data is stored securely in MongoDB. We then used OpenAI's API to analyze the data, providing users with feedback based on their health trends.
 
 # Challenges we ran into
 One of the biggest challenges we encountered was implementing Propel Auth0 for user authentication. Integrating it across platforms was far more complex than expected, particularly when trying to synchronize user sessions and securely manage health data from Apple devices. Initially, we planned to use the Cerebras AI model for health analysis, but soon realized it was too computationally demanding to run on our laptops, requiring us to pivot to OpenAI's GPT model. Additionally, we faced challenges with parsing and cleaning health data from Apple’s XML files. The raw format required custom parsers to extract and organize data, such as sleep, heart rate, and walking metrics, so that it could be fed into the AI model effectively. While time-consuming and technically demanding, this process was crucial to ensuring accurate and reliable health assessments.
