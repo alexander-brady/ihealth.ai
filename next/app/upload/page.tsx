@@ -2,18 +2,14 @@
 
 import { useDropzone } from 'react-dropzone';
 import { useState, useCallback } from 'react';
+import { useRouter } from 'next/navigation'; // Import from 'next/navigation' for Next.js 13+ in app directory
 import axios from 'axios';
-import { saveAs } from 'file-saver';
-import SectionHeading from "./../components/core/sectionHeading";
-import Button from "./../components/core/button";
-import { FaUpload } from 'react-icons/fa'; // Assuming you're using a package for icons
 
 export default function Upload() {
   const [file, setFile] = useState<File | null>(null);
   const [uploadStatus, setUploadStatus] = useState<string>('');
-  const [heartRateData, setHeartRateData] = useState<any[]>([]);
-  const [loadingHeartRate, setLoadingHeartRate] = useState<boolean>(false);
-  const [aggregatedData, setAggregatedData] = useState<{ average: number, min: number, max: number } | null>(null);
+
+  const router = useRouter(); // Initialize the router
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     setFile(acceptedFiles[0]);
@@ -28,9 +24,11 @@ export default function Upload() {
 
       try {
         await axios.post('flask/upload', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
+          headers: { 'Content-Type': 'multipart/form-data' },
         });
         setUploadStatus('File uploaded successfully');
+        // Redirect to chat page after successful upload
+        router.push('/chat'); // Redirect to /chat
       } catch (error) {
         setUploadStatus('File upload failed');
       }
@@ -39,48 +37,26 @@ export default function Upload() {
     }
   };
 
-  const handleFetchHeartRate = async () => {
-    setLoadingHeartRate(true);
-    try {
-      const response = await axios.get('flask/fetch-heart-rate');
-      const fetchedHeartRateData = response.data.heart_rate_data;
-      setHeartRateData(fetchedHeartRateData);
-      aggregateHeartRateData(fetchedHeartRateData);
-      setLoadingHeartRate(false);
-    } catch (error) {
-      console.error('Error fetching heart rate data:', error);
-      setLoadingHeartRate(false);
-    }
-  };
-
-  const aggregateHeartRateData = (data: any[]) => {
-    const values = data.map(item => parseFloat(item.value));
-    const total = values.reduce((acc, curr) => acc + curr, 0);
-    const average = values.length ? total / values.length : 0;
-    const min = Math.min(...values);
-    const max = Math.max(...values);
-    setAggregatedData({ average, min, max });
-  };
-
-  const handleSaveHeartRateAsJson = () => {
-    const jsonData = JSON.stringify(heartRateData, null, 2);
-    const blob = new Blob([jsonData], { type: 'application/json' });
-    saveAs(blob, 'heart_rate_data.json');
-  };
-
   return (
     <div className="max-w-screen-xl mx-auto py-20 px-5">
-      <SectionHeading text="Upload your Apple Watch Health Data" />
+      <h1 className="text-3xl font-bold mb-5">Upload your Apple Watch Health Data</h1>
       <div
         {...getRootProps()}
         className="flex flex-col items-center justify-center border-2 border-dashed border-gray-400 p-20 cursor-pointer text-center w-full h-64 mt-5"
       >
         <input {...getInputProps()} />
-        <FaUpload className="text-4xl mb-2" />
         <p className="font-semibold">Drag 'n' drop a file here, or click to select one</p>
       </div>
       {file && <p className="mt-2">Selected file: <strong>{file.name}</strong></p>}
-      <Button text="Upload" stylingClass="py-3 px-5 text-white bg-blue-700 hover:bg-blue-800 mt-4" onClick={handleUpload} />
+
+      {/* Small, compact button */}
+      <button
+        onClick={handleUpload}
+        className="px-4 py-2 text-white bg-blue-600 hover:bg-blue-700 rounded-md mt-4"
+      >
+        Upload
+      </button>
+
       <p className="mt-2">{uploadStatus}</p>
 
       <hr className="my-10" />
@@ -92,29 +68,6 @@ export default function Upload() {
         <li>Select "Export All Health Data."</li>
         <li>Upload the <code>exporter.xml</code> file to this application.</li>
       </ol>
-
-      {heartRateData.length > 0 && (
-        <>
-          <ul className="mt-4">
-            {heartRateData.map((record, index) => (
-              <li key={index}>
-                {`Value: ${record.value}, Start: ${new Date(record.startDate).toLocaleString()}, End: ${new Date(record.endDate).toLocaleString()}`}
-              </li>
-            ))}
-          </ul>
-
-          {aggregatedData && (
-            <div className="mt-4">
-              <h3 className="text-lg font-semibold">Aggregated Data</h3>
-              <p>Average Heart Rate: {aggregatedData.average.toFixed(2)}</p>
-              <p>Minimum Heart Rate: {aggregatedData.min}</p>
-              <p>Maximum Heart Rate: {aggregatedData.max}</p>
-            </div>
-          )}
-
-          <Button text="Save as JSON" stylingClass="py-3 px-5 text-white bg-blue-700 hover:bg-blue-800 mt-4" onClick={handleSaveHeartRateAsJson} />
-        </>
-      )}
     </div>
   );
 }

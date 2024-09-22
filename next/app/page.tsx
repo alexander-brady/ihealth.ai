@@ -27,7 +27,7 @@ export default function Home() {
               <h1 className="font-roboto text-4xl md:text-5xl font-black">Meet your digital <span className="text-blue-800">AI</span> health assistant</h1>
               <SectionSubText text="Fight off potential health issues in the long run by gaining insight through our AI doctor!" />
               <div className="flex flex-col items-center md:items-start">
-                <Button text="Start Chatting" stylingClass="py-4 px-4 text-white bg-blue-700 hover:bg-blue-800 mt-8 text-center max-w-48" pageRef="/chat" />
+                <Button text="Start Chatting" stylingClass="py-4 px-4 text-white bg-blue-700 hover:bg-blue-800 mt-8 text-center max-w-48" pageRef="/upload" />
               </div>
             </div>
             <div className="hidden md:block">

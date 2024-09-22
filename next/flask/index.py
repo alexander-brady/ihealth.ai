@@ -72,7 +72,7 @@ if not MONGO_URI:
 
 mongo_client = MongoClient(MONGO_URI)
 db = mongo_client['health_data']  # Name of your MongoDB database
-collection = db['combined_health_metrics_Pokemon']  # Name of your collection
+collection = db['combined_health_metrics_Pokemon999']  # Name of your collection
 
 # Initialize Conversation Memory
 memory = ConversationBufferMemory()
