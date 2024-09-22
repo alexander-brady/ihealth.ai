@@ -20,6 +20,38 @@ iHealth.ai automatically collects daily health data, such as heart rate, sleep a
 - PropelAuth
 - LangChain
 
+# Getting started:
+
+```bash
+    cd next
+```
+
+# Install dependencies:
+
+```bash
+    npm install
+    or if using Yarn
+    yarn install
+```
+
+# Move to the flask set up:
+
+```bash
+    cd ihealt-next
+```
+
+# Install dependencies:
+
+```bash
+    npm install
+    or if using Yarn
+    yarn install
+```
+
+### MongoDB: Ensure your MongoDB URI is set correctly in your environment variables.
+### PropelAuth: Follow the PropelAuth documentation to configure your authentication settings.
+
+
 # How we built it
 We used PropelAuth to authenticate users securely and Vercel to host our web application. Apple HealthKit APIs were used to gather health data from users' iPhones and Apple Watches, such as heart rate, sleep duration, walking distance, and audio exposure. This data is stored securely in MongoDB. We then used OpenAI's API to analyze the data, providing users with feedback based on their health trends.
 
