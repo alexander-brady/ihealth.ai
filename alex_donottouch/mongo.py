@@ -5,7 +5,7 @@ import numpy as np
 app = Flask(__name__)
 
 # Initialize MongoDB client
-
+MONGO_URI = "mongodb+srv://<your_uri>"
 client = MongoClient(MONGO_URI)
 db = client['health_data']
 heart_rate_collection = db['combined_health_metrics_Pokemon']
@@ -62,17 +62,44 @@ def analyze_sleep():
 
     return avg_sleep_duration, min_sleep_duration, max_sleep_duration, too_little_count, normal_count, too_much_count, comment
 
-# Function to generate combined analysis for LLM input
-@app.route('/analyze-health', methods=['GET'])
-def analyze_health():
+# Helper function for walking/running distance analysis
+def analyze_walking_running_distance():
+    distance_data = list(heart_rate_collection.find({"type": "HKQuantityTypeIdentifierDistanceWalkingRunning"}))
+    distances = [float(record['value']) for record in distance_data]
+
+    if not distances:
+        return None, None, None, "No distance walking/running data available."
+
+    avg_distance = np.mean(distances)
+    min_distance = np.min(distances)
+    max_distance = np.max(distances)
+
+    too_little_distance_count = sum(1 for dist in distances if dist < 0.5)  # Example: consider distances below 0.5 km as low
+    moderate_distance_count = sum(1 for dist in distances if 0.5 <= dist <= 2)
+    long_distance_count = sum(1 for dist in distances if dist > 2)
+
+    if too_little_distance_count > 0:
+        comment = "You are walking/running very short distances. Consider increasing your activity for better health."
+    elif long_distance_count > 0:
+        comment = "Great job! You are walking/running long distances, which is excellent for your health."
+    else:
+        comment = "Your walking/running distance is in a moderate range."
+
+    return avg_distance, min_distance, max_distance, too_little_distance_count, moderate_distance_count, long_distance_count, comment
+
+# Function to generate combined health analysis
+def generate_health_analysis():
     # Analyze heart rate data
     avg_heart_rate, min_heart_rate, max_heart_rate, bradycardia_count, tachycardia_count, hr_comment = analyze_heart_rate()
     
     # Analyze sleep data
     avg_sleep_duration, min_sleep_duration, max_sleep_duration, too_little_count, normal_count, too_much_count, sleep_comment = analyze_sleep()
 
+    # Analyze walking/running distance data
+    avg_distance, min_distance, max_distance, too_little_distance_count, moderate_distance_count, long_distance_count, distance_comment = analyze_walking_running_distance()
+
     # Combine results into a structured summary
-    analysis_summary = {
+    health_analysis = {
         "heart_rate": {
             "average_heart_rate": avg_heart_rate,
             "min_heart_rate": min_heart_rate,
@@ -90,10 +117,16 @@ def analyze_health():
             "too_much_sleep_count": too_much_count,
             "comment": sleep_comment,
         },
-        "combined_comment": f"Heart Rate Analysis: {hr_comment}. Sleep Analysis: {sleep_comment}."
+        "walking_running_distance": {
+            "average_distance": avg_distance,
+            "min_distance": min_distance,
+            "max_distance": max_distance,
+            "too_little_distance_count": too_little_distance_count,
+            "moderate_distance_count": moderate_distance_count,
+            "long_distance_count": long_distance_count,
+            "comment": distance_comment,
+        },
+        "combined_comment": f"Heart Rate Analysis: {hr_comment}. Sleep Analysis: {sleep_comment}. Distance Analysis: {distance_comment}."
     }
 
-    return jsonify(analysis_summary), 200
-
-if __name__ == '__main__':
-    app.run(debug=True)
+    return health_analysis
