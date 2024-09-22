@@ -1,7 +1,12 @@
 'use client';
 
 import Image from 'next/image';
-import HeroImage from "./public/Humaaans - Wireframe.png"
+import HeroImage from "./public/Humaaans - Wireframe.png";
+import Alert from "./components/icons/alert";
+import Insight from "./components/icons/insight";
+import DataIcon from "./components/icons/dataIcon";
+
+
 import Button from "./components/core/button";
 import Card from './components/core/card';
 import LandingNav from "./components/nav/landingNav";
@@ -9,6 +14,7 @@ import MobileNav from "./components/nav/mobileNav";
 import SectionHeading from "./components/core/sectionHeading";
 import SectionSubText from "./components/core/sectionSubText";
 import DropDownMenu from './components/core/dropDownMenu';
+
 
 export default function Home() {
   return (
@@ -55,9 +61,11 @@ export default function Home() {
           </div>
             <div className="">
               <div className="grid lg:grid-cols-3 gap-8 mt-20 mx-5 xl:mx-0">
-                <Card heading="Early Detection of Health Issues" information="Our AI-powered assistant analyzes your health data in real-time, flagging potential abnormalities that might go unnoticed. This early detection helps you address concerns before they become serious, giving you peace of mind and control over your well-being." />
-                <Card heading="Personalized Health Insights" information="iHealth.ai tailors its insights specifically to your health patterns, offering recommendations and trends based on your unique data. Instead of generic advice, you’ll receive information relevant to your lifestyle and personal health journey." />
-                <Card heading="Data-Driven Decisions" information="With AI-powered analysis, iHealth.ai helps you make more informed decisions about your health. By offering clear insights into your trends and deviations, our assistant empowers you to have more meaningful conversations with healthcare professionals." />
+                <Card heading="Early Detection of Health Issues" information="Our AI-powered assistant analyzes your health data in real-time, flagging potential abnormalities that might go unnoticed. This early detection helps you address concerns before they become serious, giving you peace of mind and control over your well-being." children={<Alert/>}/>
+                
+                <Card heading="Personalized Health Insights" information="iHealth.ai tailors its insights specifically to your health patterns, offering recommendations and trends based on your unique data. Instead of generic advice, you’ll receive information relevant to your lifestyle and personal health journey." children={<Insight/>}/>
+                
+                <Card heading="Data-Driven Decisions" information="With AI-powered analysis, iHealth.ai helps you make more informed decisions about your health. By offering clear insights into your trends and deviations, our assistant empowers you to have more meaningful conversations with healthcare professionals." children={<DataIcon/>}/>
               </div>
             </div>
         </div>
