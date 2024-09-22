@@ -56,10 +56,15 @@ class OpenAILLM(LLM, BaseModel):
     def _llm_type(self) -> str:
         return "openai"
 
-UPLOAD_FOLDER = '/Users/alexdang/ihealth.ai/uploads'
-OUTPUT_FOLDER = '/Users/alexdang/ihealth.ai/cool'
+# Dynamic path configuration
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # Gets the directory of the current file
+UPLOAD_FOLDER = os.path.join(BASE_DIR, 'uploads')      # Path to uploads folder
+OUTPUT_FOLDER = os.path.join(BASE_DIR, 'output')       # Path to output folder
+
+# Ensure directories exist
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(OUTPUT_FOLDER, exist_ok=True)
+
 
 MONGO_URI = "mongodb+srv://alexjbrady66:dLpyb10SKl8FHRNX@pennapps.wzkt4.mongodb.net/?retryWrites=true&w=majority&appName=PennApps"
 if not MONGO_URI:
