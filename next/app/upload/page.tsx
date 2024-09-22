@@ -27,8 +27,8 @@ export default function Upload() {
       formData.append('file', file);
 
       try {
-        await axios.post('http://127.0.0.1:5000/upload', formData, {
-          headers: { 'Content-Type': 'multipart/form-data' },
+        await axios.post('flask/upload', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
         });
         setUploadStatus('File uploaded successfully');
       } catch (error) {

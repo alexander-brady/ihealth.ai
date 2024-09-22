@@ -1,6 +1,6 @@
-'use client';
+'use client';  // This tells Next.js it's a Client Component
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import axios from 'axios';
 import ChatBubble from '../components/chatBotComps/chatBubble';
 import InputArea from '../components/chatBotComps/input';
@@ -13,10 +13,11 @@ export type Message = {
 export default function Home() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState<string>('');
+  const [isSending, setIsSending] = useState<boolean>(false); // Track message sending
 
-  const sendMessage = async () => {
-    if (!input.trim()) return;
-
+  const sendMessage = useCallback(async () => {
+    if (!input.trim() || isSending) return; // prevent re-sending if already sending
+    setIsSending(true); // prevent multiple sends
     const userMessage: Message = { sender: 'user', text: input };
     setMessages((prevMessages) => [...prevMessages, userMessage]);
 
@@ -31,9 +32,10 @@ export default function Home() {
       console.error('Error communicating with the AI model:', error);
       setMessages((prevMessages) => [...prevMessages, { sender: 'ai', text: 'Sorry, there was an error.' }]);
     } finally {
-      setInput('');
+      setInput(''); // Reset input after sending
+      setIsSending(false); // Allow another message to be sent
     }
-  };
+  }, [input, isSending]);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-8">
