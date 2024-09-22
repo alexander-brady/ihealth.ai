@@ -1,9 +1,11 @@
 'use client';
 
-import { CSSProperties, useState } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
+import ChatBubble from '../components/chatBotComps/chatBubble';
+import InputArea from '../components/chatBotComps/input';
 
-type Message = {
+export type Message = {
   sender: 'user' | 'ai';
   text: string;
 };
@@ -11,127 +13,40 @@ type Message = {
 export default function Chat() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState<string>('');
-  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const sendMessage = async () => {
     if (!input.trim()) return;
 
     const userMessage: Message = { sender: 'user', text: input };
     setMessages((prevMessages) => [...prevMessages, userMessage]);
-    setIsLoading(true);
 
     try {
-      // Send the user's message to the Flask backend
       const response = await axios.post<{ text: string }>('api/send-message', {
         message: input,
       });
-      console.log(response.data);
       const aiMessage: Message = { sender: 'ai', text: response.data.text };
       setMessages((prevMessages) => [...prevMessages, aiMessage]);
     } catch (error) {
       console.error('Error communicating with the AI model:', error);
-      const errorMessage: Message = { sender: 'ai', text: 'Sorry, there was an error.' };
-      setMessages((prevMessages) => [...prevMessages, errorMessage]);
+      setMessages((prevMessages) => [...prevMessages, { sender: 'ai', text: 'Sorry, there was an error.' }]);
     } finally {
-      setIsLoading(false);
       setInput('');
     }
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setInput(e.target.value);
-  };
-
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      sendMessage();
-    }
-  };
-
   return (
-    <div style={styles.container}>
-      <h1 style={styles.header}>Chat with Cerebras AI</h1>
-      <div style={styles.chatBox}>
+    <div className="flex flex-col items-center justify-center min-h-screen p-8">
+      <h1 className="text-center text-3xl font-bold mb-4">Chat with iHealth.<span className="text-blue-800">ai</span></h1>
+      <div className="w-full max-w-screen-lg h-[550px] bg-slate-100 rounded-lg p-4 overflow-y-auto mb-4">
         {messages.map((message, index) => (
-          <div
-            key={index}
-            style={{
-              ...styles.message,
-              alignSelf: message.sender === 'user' ? 'flex-end' : 'flex-start',
-              backgroundColor: message.sender === 'user' ? '#daf7a6' : '#f1f1f1',
-            }}
-          >
-            <strong>{message.sender === 'user' ? 'You: ' : 'AI: '}</strong>
-            {message.text}
-          </div>
+          <ChatBubble key={index} message={message} />
         ))}
       </div>
-      <div style={styles.inputContainer}>
-        <textarea
-          value={input}
-          onChange={handleInputChange}
-          onKeyDown={handleKeyPress}
-          placeholder="Type your message..."
-          style={styles.input}
-          rows={2}
-        />
-        <button onClick={sendMessage} disabled={isLoading} style={styles.button}>
-          {isLoading ? 'Sending...' : 'Send'}
-        </button>
-      </div>
+      <InputArea
+        input={input}
+        setInput={setInput}
+        sendMessage={sendMessage}
+      />
     </div>
   );
 }
-
-const styles: { [key: string]: CSSProperties } = {
-  container: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    minHeight: '100vh',
-    padding: '0 2rem',
-  },
-  header: {
-    fontSize: '2rem',
-    marginBottom: '1rem',
-  },
-  chatBox: {
-    width: '100%',
-    maxWidth: '600px',
-    minHeight: '400px',
-    border: '1px solid #ddd',
-    borderRadius: '10px',
-    padding: '1rem',
-    overflowY: 'auto',
-    marginBottom: '1rem',
-  },
-  message: {
-    padding: '0.5rem 1rem',
-    borderRadius: '10px',
-    margin: '0.5rem 0',
-    maxWidth: '80%',
-  },
-  inputContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    width: '100%',
-    maxWidth: '600px',
-  },
-  input: {
-    flex: 1,
-    padding: '0.5rem',
-    border: '1px solid #ddd',
-    borderRadius: '10px',
-    marginRight: '1rem',
-  },
-  button: {
-    padding: '0.5rem 1rem',
-    backgroundColor: '#0070f3',
-    color: 'white',
-    border: 'none',
-    borderRadius: '10px',
-    cursor: 'pointer',
-  },
-};

@@ -18,7 +18,7 @@ export default function DropDownMenu({question, answer}: DropDownMenuProps){
 
   return(
     <div>
-      <div className={` bg-slate-50 mt-10 ${showDropdown ? 'rounded-tl-md rounded-tr-md' : 'rounded-md'}`}>
+      <div className={` bg-slate-100 mt-10 ${showDropdown ? 'rounded-tl-md rounded-tr-md' : 'rounded-md'}`}>
         <div onClick={Callback} className="flex justify-between items-center p-4">
           <h1 className="font-roboto text-sm md:text-2xl font-black">{question}</h1>
           <button className="flex flex-col h-12 w-12 bg-slate-100 rounded-lg justify-center items-center relative overflow-hidden">
@@ -30,7 +30,7 @@ export default function DropDownMenu({question, answer}: DropDownMenuProps){
       
       
       {showDropdown && (
-        <div className="bg-slate-50 text-left rounded-bl-md rounded-br-md">
+        <div className="bg-slate-100 text-left rounded-bl-md rounded-br-md">
           <div className="p-4">
             <SectionSubText text={answer} />
           </div>
