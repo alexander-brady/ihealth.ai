@@ -234,6 +234,76 @@ def analyze_heart_rate():
         print(f"Error analyzing heart rate data: {str(e)}")
         return jsonify({"error": f"Failed to analyze data: {str(e)}"}), 500
 
+@app.route('/analyze-sleep', methods=['GET'])
+def analyze_sleep():
+    try:
+        # Fetch sleep analysis data from MongoDB
+        sleep_data = collection.find({"type": "HKCategoryTypeIdentifierSleepAnalysis"})
+        sleep_list = []
+
+        # Sleep thresholds
+        thresholds = {
+            "too_little": 6,   # less than 6 hours
+            "normal": (6, 9),  # between 6 and 9 hours
+            "too_much": 9      # more than 9 hours
+        }
+
+        too_little_count = 0
+        normal_count = 0
+        too_much_count = 0
+        total_sleep_hours = 0
+        sleep_entries = 0
+
+        # Loop through the sleep data and analyze
+        for record in sleep_data:
+            sleep_duration = float(record.get("sleepDurationHours", 0))
+            
+            if not sleep_duration or sleep_duration == "NaN":
+                continue  # Skip records with no sleep duration
+
+            # Classify sleep duration based on the thresholds
+            if sleep_duration < thresholds["too_little"]:
+                too_little_count += 1
+            elif thresholds["normal"][0] <= sleep_duration <= thresholds["normal"][1]:
+                normal_count += 1
+            elif sleep_duration > thresholds["too_much"]:
+                too_much_count += 1
+
+            # Accumulate the total sleep hours and count the number of entries
+            total_sleep_hours += sleep_duration
+            sleep_entries += 1
+
+            # Add each sleep entry to the list
+            sleep_list.append({
+                "startDate": record.get("startDate"),
+                "endDate": record.get("endDate"),
+                "sleepDurationHours": sleep_duration
+            })
+
+        # Calculate average sleep duration
+        average_sleep_duration = total_sleep_hours / sleep_entries if sleep_entries else 0
+
+        # Provide general comment based on analysis
+        if too_little_count > normal_count and too_little_count > too_much_count:
+            general_comment = "Your sleep duration tends to be on the lower side. Try getting more rest to improve your well-being."
+        elif too_much_count > normal_count and too_much_count > too_little_count:
+            general_comment = "You're sleeping more than the recommended amount. Consider if there are any underlying issues affecting your sleep."
+        else:
+            general_comment = "Your sleep duration is within the healthy range. Keep maintaining a good sleep schedule."
+
+        # Return analysis and comment as JSON
+        return jsonify({
+            "average_sleep_duration": average_sleep_duration,
+            "too_little_count": too_little_count,
+            "normal_count": normal_count,
+            "too_much_count": too_much_count,
+            "comment": general_comment
+        }), 200
+
+    except Exception as e:
+        print(f"Error fetching or analyzing sleep data: {str(e)}")
+        return jsonify({"error": f"Failed to fetch or analyze data: {str(e)}"}), 500
+
 @app.route('/upload', methods=['POST'])
 def upload_file():
     file = request.files.get('file')

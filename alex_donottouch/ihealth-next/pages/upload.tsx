@@ -9,6 +9,8 @@ interface FileUploadProps {
 }
 
 export default function Upload() {
+  const [sleepAnalysis, setSleepAnalysis] = useState<any>(null); // For sleep analysis
+
   const [file, setFile] = useState<File | null>(null);
   const [uploadStatus, setUploadStatus] = useState<string>('');
   const [heartRateData, setHeartRateData] = useState<any[]>([]); // For heart rate data
@@ -42,7 +44,15 @@ export default function Upload() {
       setUploadStatus('No file selected');
     }
   };
-
+  // Fetch sleep analysis from the backend
+  const handleFetchSleepAnalysis = async () => {
+    try {
+      const response = await axios.get('http://127.0.0.1:5000/analyze-sleep');
+      setSleepAnalysis(response.data); // Save the sleep analysis data
+    } catch (error) {
+      console.error('Error fetching sleep analysis:', error);
+    }
+  };
   const handleFetchHeartRate = async () => {
     setLoadingHeartRate(true);
     try {
@@ -141,7 +151,22 @@ export default function Upload() {
       )}
 
       <hr />
+      {/* Sleep Analysis */}
+      <h2>Sleep Analysis</h2>
+      <button onClick={handleFetchSleepAnalysis}>
+        Fetch Sleep Analysis
+      </button>
 
+      {sleepAnalysis && (
+        <div>
+          <h3>Sleep Analysis Result</h3>
+          <p>Average Sleep Duration: {sleepAnalysis.average_sleep_duration.toFixed(2)} hours</p>
+          <p>Too Little Sleep Count: {sleepAnalysis.too_little_count}</p>
+          <p>Normal Sleep Count: {sleepAnalysis.normal_count}</p>
+          <p>Too Much Sleep Count: {sleepAnalysis.too_much_count}</p>
+          <p><strong>Comment:</strong> {sleepAnalysis.comment}</p>
+        </div>
+      )}
       {/* Heart Rate Analysis */}
       <h2>Heart Rate Analysis</h2>
       <button onClick={handleFetchHeartRateAnalysis}>
