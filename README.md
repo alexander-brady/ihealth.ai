@@ -34,20 +34,6 @@ iHealth.ai automatically collects daily health data, such as heart rate, sleep a
     yarn install
 ```
 
-# Move to the flask set up:
-
-```bash
-    cd ihealt-next
-```
-
-# Install dependencies:
-
-```bash
-    npm install
-    or if using Yarn
-    yarn install
-```
-
 ### MongoDB: Ensure your MongoDB URI is set correctly in your environment variables.
 ### PropelAuth: Follow the PropelAuth documentation to configure your authentication settings.
 
