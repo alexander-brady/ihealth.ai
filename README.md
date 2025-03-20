@@ -1,5 +1,6 @@
 # iHealth.ai
-### Created by Alexander Brady, Alexandre Payumo, Hung Que Dang, and Jordan Yin
+### Built by Alex, Alex, Alex and Jordan at PennApps XXV 
+> PennApps was the nation's first collegiate hackathon, held annually at the University of Pennsylvania.
 
 ## Inspiration
 92% of Americans don’t undergo routine health screenings. In fact, missed preventative opportunities cost US healthcare 55 billion dollars every year. We wanted to create a proactive solution that uses the data we already generate through devices like iPhones and Apple Watches. Our goal was to provide people with daily insights into their health, helping them make informed decisions about whether to visit a doctor or change their habits before more serious issues arise.
@@ -26,7 +27,7 @@ iHealth.ai automatically collects daily health data, such as heart rate, sleep a
     cd next
 ```
 
-# Install dependencies:
+## Install dependencies:
 
 ```bash
     npm install
