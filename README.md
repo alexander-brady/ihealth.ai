@@ -24,19 +24,20 @@ iHealth.ai automatically collects daily health data, such as heart rate, sleep a
 # Getting started:
 
 ```bash
-    cd next
+cd next
 ```
 
 ## Install dependencies:
 
 ```bash
-    npm install
-    or if using Yarn
-    yarn install
+npm install
+# or if using Yarn
+yarn install
 ```
 
-### MongoDB: Ensure your MongoDB URI is set correctly in your environment variables.
-### PropelAuth: Follow the PropelAuth documentation to configure your authentication settings.
+**MongoDB:** Ensure your MongoDB URI is set correctly in your environment variables.
+
+**PropelAuth:** Follow the PropelAuth documentation to configure your authentication settings.
 
 
 # How we built it
